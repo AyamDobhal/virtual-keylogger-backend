@@ -50,7 +50,7 @@ export class KeyEventService {
 			const keyEvents = new PaginatedResponse(
 				keyEventQuery,
 				page || 1,
-				limit || 50
+				limit || 5
 			);
 			resolve(keyEvents.get());
 		});

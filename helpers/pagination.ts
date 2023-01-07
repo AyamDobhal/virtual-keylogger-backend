@@ -4,7 +4,7 @@ export class PaginatedResponse<T extends Query<any, any, any>> {
 	constructor(
 		public query: T,
 		public page: number,
-		public pageSize: number = 50
+		public pageSize: number = 5
 	) {}
 
 	async get() {
@@ -12,7 +12,8 @@ export class PaginatedResponse<T extends Query<any, any, any>> {
 		const totalPages = Math.ceil(count / this.pageSize);
 		const results = await this.query
 			.skip((this.page - 1) * this.pageSize)
-			.limit(this.pageSize);
+			.limit(this.pageSize)
+			.sort("-timestamp");
 		return {
 			results,
 			totalPages
