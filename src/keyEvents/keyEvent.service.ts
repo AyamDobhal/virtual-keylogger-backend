@@ -31,7 +31,20 @@ export class KeyEventService {
 		};
 	}
 
+	removeMsFromTimestamp(timestamp: string): Date {
+		return new Date(timestamp.split(".")[0] + "Z");
+	}
+
 	async create(keyEvent: CreateKeyEventDto): Promise<KeyEventResponseDto> {
+		keyEvent.timestamp = this.removeMsFromTimestamp(
+			new Date(keyEvent.timestamp).toISOString()
+		);
+		keyEvent.lastClear = this.removeMsFromTimestamp(
+			new Date(keyEvent.lastClear).toISOString()
+		);
+		keyEvent.sessionStartTime = this.removeMsFromTimestamp(
+			new Date(keyEvent.sessionStartTime).toISOString()
+		);
 		const createdKeyEvent = new this.keyEventModel(keyEvent);
 		return this.parseEvent(await createdKeyEvent.save());
 	}
