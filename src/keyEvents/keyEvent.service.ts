@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 import { KeyEvent } from "src/keyEvents/schemas/keyEvent.schema";
 import { CreateKeyEventDto } from "./dtos/createKeyEvent.dto";
 import { KeyEventResponseDto } from "./dtos/keyEventResponse.dto";
+import { PaginatedResponse, TPaginatedResponse } from "helpers/pagination";
 
 @Injectable()
 export class KeyEventService {
@@ -38,7 +39,21 @@ export class KeyEventService {
 	async find(query: {
 		sessionStartTime?: Date;
 		lastClear?: Date;
-	}): Promise<Array<KeyEvent>> {
-		return this.keyEventModel.find(query).exec();
+		page?: number;
+		limit?: number;
+	}): Promise<TPaginatedResponse<KeyEvent>> {
+		const { page, limit } = query;
+		delete query.page;
+		delete query.limit;
+		const data = new Promise<TPaginatedResponse<KeyEvent>>((resolve) => {
+			const keyEventQuery = this.keyEventModel.find(query);
+			const keyEvents = new PaginatedResponse(
+				keyEventQuery,
+				page || 1,
+				limit || 50
+			);
+			resolve(keyEvents.get());
+		});
+		return await data;
 	}
 }

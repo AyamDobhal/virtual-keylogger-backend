@@ -18,7 +18,13 @@ export class KeyEventController {
 	@Get("")
 	async find(
 		@Res() res: Response,
-		@Query() query: { sessionStartTime?: Date; lastClear?: Date }
+		@Query()
+		query: {
+			sessionStartTime?: Date;
+			lastClear?: Date;
+			page?: number;
+			limit?: number;
+		}
 	) {
 		const keyEvents = await this.keyEventService.find(query);
 		return res.status(200).json(keyEvents);
