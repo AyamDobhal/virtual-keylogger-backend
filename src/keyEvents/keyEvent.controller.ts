@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, Res } from "@nestjs/common";
 import { KeyEventService } from "./keyEvent.service";
 import { CreateKeyEventDto } from "./dtos/createKeyEvent.dto";
 import { Response } from "express";
@@ -18,9 +18,9 @@ export class KeyEventController {
 	@Get("")
 	async find(
 		@Res() res: Response,
-		@Body() body: { sessionStartTime?: Date; lastClear?: Date }
+		@Query() query: { sessionStartTime?: Date; lastClear?: Date }
 	) {
-		const keyEvents = await this.keyEventService.find(body);
+		const keyEvents = await this.keyEventService.find(query);
 		return res.status(200).json(keyEvents);
 	}
 }
